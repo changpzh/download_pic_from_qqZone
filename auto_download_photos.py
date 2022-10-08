@@ -274,7 +274,8 @@ class QQZonePictures:
         '''rename format: {f_name}_{exist_index}" + f_suffix'''
         temp_file_name = f_name + f_suffix
         exist_index = 1
-        while f_name_lists.count(temp_file_name):  # 文件重名就重新命名
+        # while f_name_lists.count(temp_file_name):  # 文件重名就重新命名
+        while f_name_lists.index(temp_file_name) >= 0:  # 检测名字是否重名，当list数据量大的时候，用index的效率比count要高
             temp_file_name = f"{f_name}_{exist_index}" + f_suffix
             exist_index += 1
         return temp_file_name
