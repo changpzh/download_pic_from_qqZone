@@ -270,12 +270,12 @@ class QQZonePictures:
         return photo_lists, album_name
 
     @staticmethod
-    def rename_if_exist(f_name, f_suffix, f_name_lists):
+    def rename_if_exist(f_name, f_suffix, f_name_sets):
         '''rename format: {f_name}_{exist_index}" + f_suffix'''
         temp_file_name = f_name + f_suffix
         exist_index = 1
         # while f_name_lists.count(temp_file_name):  # 文件重名就重新命名
-        while f_name_lists.index(temp_file_name) >= 0:  # 检测名字是否重名，当list数据量大的时候，用index的效率比count要高
+        while temp_file_name in f_name_sets:  # 检测名字是否重名，当list数据量大的时候，用index的效率比count要高
             temp_file_name = f"{f_name}_{exist_index}" + f_suffix
             exist_index += 1
         return temp_file_name
@@ -289,14 +289,14 @@ class QQZonePictures:
 
     def get_name_and_urls(self, photo_lists):
         tmp_photo_name_and_urls = []
-        file_names = []
+        file_names = set()  # 名字不重名，所以改用sets类型更好
         for item in tqdm(photo_lists, desc='照片链接处理中...'):
             item_name = item['name'].split('/')[-1].split('.')[-1]
             item_url = item['url'] if item['url'] else item['raw']
             is_video = item['is_video'] == 'true'
             suffix = '.mp4' if is_video else '.jpg'
             file_name = self.rename_if_exist(item_name, suffix, file_names)
-            file_names.append(file_name)
+            file_names.add(file_name)
             tmp_photo_name_and_urls.append((file_name, item_url))
         return tmp_photo_name_and_urls
 
